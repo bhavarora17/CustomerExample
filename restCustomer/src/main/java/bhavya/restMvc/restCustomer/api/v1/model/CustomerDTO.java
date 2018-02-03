@@ -1,26 +1,24 @@
 package bhavya.restMvc.restCustomer.api.v1.model;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
 public class CustomerDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
     String firstName;
     String lastName;
+
+    @JsonProperty("customer_url")
     String customerUrl;
 
     public CustomerDTO() {
     }
 
-    public Long getId() {
-        return this.id;
-    }
 
     public String getFirstName() {
         return this.firstName;
@@ -34,9 +32,6 @@ public class CustomerDTO {
         return this.customerUrl;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -55,9 +50,6 @@ public class CustomerDTO {
         if (!(o instanceof CustomerDTO)) return false;
         final CustomerDTO other = (CustomerDTO) o;
         if (!other.canEqual((Object) this)) return false;
-        final Object this$id = this.getId();
-        final Object other$id = other.getId();
-        if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
         final Object this$firstName = this.getFirstName();
         final Object other$firstName = other.getFirstName();
         if (this$firstName == null ? other$firstName != null : !this$firstName.equals(other$firstName)) return false;
@@ -74,8 +66,6 @@ public class CustomerDTO {
     public int hashCode() {
         final int PRIME = 59;
         int result = 1;
-        final Object $id = this.getId();
-        result = result * PRIME + ($id == null ? 43 : $id.hashCode());
         final Object $firstName = this.getFirstName();
         result = result * PRIME + ($firstName == null ? 43 : $firstName.hashCode());
         final Object $lastName = this.getLastName();
@@ -90,6 +80,6 @@ public class CustomerDTO {
     }
 
     public String toString() {
-        return "CustomerDTO(id=" + this.getId() + ", firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + ", customerUrl=" + this.getCustomerUrl() + ")";
+        return "CustomerDTO(firstName=" + this.getFirstName() + ", lastName=" + this.getLastName() + ", customerUrl=" + this.getCustomerUrl() + ")";
     }
 }

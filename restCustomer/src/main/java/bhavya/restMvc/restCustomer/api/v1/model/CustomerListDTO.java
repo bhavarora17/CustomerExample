@@ -1,11 +1,11 @@
 package bhavya.restMvc.restCustomer.api.v1.model;
 
+import javax.persistence.Entity;
 import java.util.List;
 
 public class CustomerListDTO {
     List<CustomerDTO> customers;
 
-    @java.beans.ConstructorProperties({"customers"})
     public CustomerListDTO(List<CustomerDTO> customers) {
         this.customers = customers;
     }

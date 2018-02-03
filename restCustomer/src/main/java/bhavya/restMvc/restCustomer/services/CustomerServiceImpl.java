@@ -2,6 +2,7 @@ package bhavya.restMvc.restCustomer.services;
 
 import bhavya.restMvc.restCustomer.api.v1.mapper.CustomerMapper;
 import bhavya.restMvc.restCustomer.api.v1.model.CustomerDTO;
+import bhavya.restMvc.restCustomer.domain.Customer;
 import bhavya.restMvc.restCustomer.repositories.CategoryRepository;
 import bhavya.restMvc.restCustomer.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,14 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerMapper customerMapper;
-    private final CustomerRepository customerRepository;
-
-    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepository customerRepository) {
+    private CustomerMapper customerMapper;
+    private CustomerRepository customerRepository;
+    @Autowired
+    public void setCustomerMapper(CustomerMapper customerMapper) {
         this.customerMapper = customerMapper;
+    }
+    @Autowired
+    public void setCustomerRepository(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
@@ -40,5 +44,19 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id)
                 .map(customerMapper::customerToCustomerDTO)
                 .orElseThrow(RuntimeException::new); //todo implement better exception handling
+    }
+
+    @Override
+    public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+
+        Customer customer = customerMapper.customerDtoToCustomer(customerDTO);
+
+        Customer savedCustomer = customerRepository.save(customer);
+
+        CustomerDTO returnDto = customerMapper.customerToCustomerDTO(savedCustomer);
+
+        returnDto.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
+
+        return returnDto;
     }
 }
