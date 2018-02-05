@@ -43,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerRepository.findById(id)
                 .map(customerMapper::customerToCustomerDTO)
-                .orElseThrow(RuntimeException::new); //todo implement better exception handling
+                .orElseThrow(ResourceNotFoundException::new); //todo implement better exception handling
     }
 
     @Override
@@ -58,5 +58,44 @@ public class CustomerServiceImpl implements CustomerService {
         returnDto.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
 
         return returnDto;
+    }
+
+    @Override
+    public CustomerDTO saveCustomerByDTO(Long id, CustomerDTO customerDTO){
+        Customer customer = customerMapper.customerDtoToCustomer(customerDTO);
+        customer.setId(id);
+        return saveAndReturnDTO(customer);
+    }
+
+    @Override
+    public CustomerDTO patchCustomer(Long id, CustomerDTO customerDTO) {
+        return customerRepository.findById(id).map(customer -> {
+            if (customerDTO.getFirstname() != null) {
+                customer.setFirstname(customerDTO.getFirstname());
+            }
+
+            if (customerDTO.getLastname() != null) {
+                customer.setLastname(customerDTO.getLastname());
+            }
+
+            CustomerDTO returnDTO = customerMapper.customerToCustomerDTO(customerRepository.save(customer));
+
+            returnDTO.setCustomerUrl("/api/v1/customer/" + id);
+
+            return returnDTO;
+        }).orElseThrow(ResourceNotFoundException::new);
+
+    }
+
+    @Override
+    public void deleteCustomerById(Long id){
+        customerRepository.deleteById(id);
+    }
+
+    public CustomerDTO saveAndReturnDTO(Customer customer){
+        Customer savedCustomer = customerRepository.save(customer);
+        CustomerDTO returnDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+        returnDTO.setCustomerUrl("api/v1/customer/" + savedCustomer.getId());
+        return returnDTO;
     }
 }
